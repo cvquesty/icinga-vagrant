@@ -22,19 +22,19 @@ class apache {
 
   package { $apache:
     ensure => installed,
-    alias => 'apache'
+    alias  => 'apache',
   }
 
   exec { 'iptables-allow-http':
-    path => '/bin:/usr/bin:/sbin:/usr/sbin',
-    unless => 'grep -Fxqe "-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT" /etc/sysconfig/iptables',
-    command => 'lokkit --enabled --service=http'
+    path    => '/bin:/usr/bin:/sbin:/usr/sbin',
+    unless  => 'grep -Fxqe "-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT" /etc/sysconfig/iptables',
+    command => 'lokkit --enabled --service=http',
   }
 
   service { $apache:
-    enable => true,
-    ensure => running,
-    alias => 'apache',
-    require => [ Package['apache'], Exec['iptables-allow-http'] ]
+    ensure  => 'running',
+    enable  => true,
+    alias   => 'apache',
+    require => [ Package['apache'], Exec['iptables-allow-http'] ],
   }
 }
