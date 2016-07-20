@@ -27,23 +27,23 @@ define cpan(
   Exec { path => '/usr/bin' }
 
   package { 'perl-CPAN':
-    ensure => installed
+    ensure => 'installed',
   }
 
   file { [ '/root/.cpan/', '/root/.cpan/CPAN/' ]:
-    ensure => directory
+    ensure => 'directory',
   }
 
   file { '/root/.cpan/CPAN/MyConfig.pm':
     content => template('cpan/MyConfig.pm.erb'),
     require => [ Package['perl-CPAN'],
-                 File[[ '/root/.cpan/', '/root/.cpan/CPAN/' ]] ]
+                File[[ '/root/.cpan/', '/root/.cpan/CPAN/' ]] ],
   }
 
   exec { "cpan-${name}":
     command => "sudo perl -MCPAN -e 'install ${name}'",
     creates => $creates,
     require => File['/root/.cpan/CPAN/MyConfig.pm'],
-    timeout => $timeout
+    timeout => $timeout,
   }
 }
