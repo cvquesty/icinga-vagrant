@@ -13,13 +13,13 @@
 #   include icinga_rpm
 #
 class icinga_rpm (
-  $pkg_repo_version = $::icinga_rpm::params::pkg_repo_version,
-  $pkg_repo_release_key = $::icinga_rpm::params::pkg_repo_release_key,
-  $pkg_repo_release_metadata_expire = $::icinga_rpm::params::pkg_repo_release_metadata_expire,
-  $pkg_repo_release_url = $::icinga_rpm::params::pkg_repo_release_url,
-  $pkg_repo_snapshot_key = $::icinga_rpm::params::pkg_repo_snapshot_key,
+  $pkg_repo_version                  = $::icinga_rpm::params::pkg_repo_version,
+  $pkg_repo_release_key              = $::icinga_rpm::params::pkg_repo_release_key,
+  $pkg_repo_release_metadata_expire  = $::icinga_rpm::params::pkg_repo_release_metadata_expire,
+  $pkg_repo_release_url              = $::icinga_rpm::params::pkg_repo_release_url,
+  $pkg_repo_snapshot_key             = $::icinga_rpm::params::pkg_repo_snapshot_key,
   $pkg_repo_snapshot_metadata_expire = $::icinga_rpm::params::pkg_repo_snapshot_metadata_expire,
-  $pkg_repo_snapshot_url = $::icinga_rpm::params::pkg_repo_snapshot_url,
+  $pkg_repo_snapshot_url             = $::icinga_rpm::params::pkg_repo_snapshot_url,
 ) inherits icinga_rpm::params {
 
   if $pkg_repo_release_metadata_expire {

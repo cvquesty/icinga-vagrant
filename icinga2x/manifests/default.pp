@@ -175,7 +175,7 @@ file { '/etc/icingaweb2/preferences/icingaadmin':
   group   => 'icingaweb2',
   mode    => '2770',
   source  => 'puppet:////vagrant/files/etc/icingaweb2/preferences/icingaadmin',
-  require => [ package['icingaweb2'], File['/etc/icingaweb2/preferences'] ],
+  require => [ Package['icingaweb2'], File['/etc/icingaweb2/preferences'] ],
 }
 
 # user-defined dashboards for the default 'icingaadmin' user
@@ -358,7 +358,7 @@ file {'/etc/icingaweb2/modules/director':
   owner   => 'root',
   group   => 'icingaweb2',
   mode    => '2770',
-  require => [ package['icingaweb2'], File['/etc/icingaweb2/modules'] ], } ->
+  require => [ Package['icingaweb2'], File['/etc/icingaweb2/modules'] ], } ->
 
 file { '/etc/icingaweb2/modules/director/config.ini':
   ensure  => 'file',
