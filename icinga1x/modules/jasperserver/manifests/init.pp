@@ -109,7 +109,7 @@ class jasperserver {
     path    => '/bin:/usr/bin:/sbin:/usr/sbin',
     unless  => "mysql -u${jasperDbUsername} -p${jasperDbPassword} ${jasperDbName} -e 'SELECT * FROM JIUser LIMIT 1'",
     command => "mysql -u${jasperDbUsername} -p${jasperDbPassword} ${jasperDbName} < install_resources/sql/mysql/js-create.ddl",
-    require => File["${jasperHome}/buildomatic/default_master.properties"],
+    require => File[ $jasperBuildomaticDefaultMasterProperties ],
     cwd     => "${jasperHome}/buildomatic",
   }
 
