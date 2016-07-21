@@ -33,7 +33,7 @@ class epel {
 
   epel::key { 'RPM-GPG-KEY-EPEL-6':
     path   => '/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6',
-    before => Yumrepo['icinga-rpm-snapshot'],
+    before => Yumrepo['icinga_rpm_snapshot'],
   }
 }
 

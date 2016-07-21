@@ -8,7 +8,7 @@
 #
 # Actions:
 #
-# Requires: icinga-rpm-snapshot, icinga
+# Requires: icinga_rpm_snapshot, icinga
 #
 # Sample Usage:
 #

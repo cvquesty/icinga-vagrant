@@ -9,7 +9,7 @@ class icinga2_classicui {
   package { 'icinga2_classicui-config':
     ensure  => 'latest',
     before  => Package['icinga-gui'],
-    require => Class['icinga-rpm-snapshot'],
+    require => Class['icinga_rpm_snapshot'],
     notify  => Service['apache'],
   }
 
