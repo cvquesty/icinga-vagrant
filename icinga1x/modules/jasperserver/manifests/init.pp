@@ -55,7 +55,7 @@ class jasperserver {
   exec { 'create-mysql-jasperserver-user':
     path    => '/bin:/usr/bin:/sbin:/usr/sbin',
     unless  => "mysql -u${jasperDbUsername} -p${jasperDbPassword} ${jasperDbName}",
-    command => "mysql -uroot -p${mysql::mysqlRootPassword} -e \"CREATE DATABASE ${jasperDbName}; GRANT ALL ON ${jasperDbName}.* TO ${jasperDbUsername}@${jasperDbHost} IDENTIFIED BY \'${jasperDbPassword}\';\"",
+    command => "mysql -uroot -p${mysql::mysqlRootPassword} -e \"CREATE DATABASE ${jasperDbName}; GRANT ALL ON ${jasperDbName}.* TO ${jasperDbUsername}@${jasperDbHost} IDENTIFIED BY ${jasperDbPassword};\"",
     require => Service['mysqld'],
   }
 
@@ -135,7 +135,7 @@ class jasperserver {
     command => "${jasperHome}/buildomatic/js-ant deploy-webapp-ce",
     require => Exec['install-jasperserver-catalog-minimal'],
     cwd     => "${jasperHome}/buildomatic",
-    user    => root,
+    user    => 'root',
     before  => Anchor['jasperserver::end'],
     notify  => Service['tomcat6'],
   }
