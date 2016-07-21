@@ -18,7 +18,7 @@
 #
 class php {
 
-  include ::apache
+  include ['::apache']
 
   package { 'php':
     ensure  => installed,

@@ -3,7 +3,7 @@
 # OSMC demo config
 # admin pw: admin
 
-include ::epel
+include ['::epel']
 
 $graylog_version       = '1.2'
 $elasticsearch_version = ''
@@ -32,8 +32,8 @@ class {'::apache':
 
 class {'::apache::mod::php': }
 
-include '::php::cli'
-include '::php::mod_php5'
+include ['::php::cli']
+include ['::php::mod_php5']
 
 php::ini { '/etc/php.ini':
   display_errors    => 'On',
@@ -127,12 +127,12 @@ class { '::icinga_rpm':
   pkg_repo_version => 'release',
 }
 
-include '::mysql::server'
-include ::icinga2
-include ::icinga2_ido_mysql
-include ::icingaweb2
-include ::icingaweb2_internal_db_mysql
-include ::monitoring_plugins
+include ['::mysql::server']
+include ['::icinga2']
+include ['::icinga2_ido_mysql']
+include ['::icingaweb2']
+include ['::icingaweb2_internal_db_mysql']
+include ['::monitoring_plugins']
 
 file { '/etc/icinga2/conf.d/api-users.conf':
   owner   => 'icinga',

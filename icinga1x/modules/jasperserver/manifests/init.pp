@@ -16,8 +16,8 @@
 #
 
 class jasperserver {
-  include ::mysql
-  include ::tomcat6
+  include ['::mysql']
+  include ['::tomcat6']
 
   $jasperVersion                            = '5.5.0'
   $jasperminorVersion                       = 'a'

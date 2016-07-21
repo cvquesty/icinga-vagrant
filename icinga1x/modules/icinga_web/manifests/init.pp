@@ -1,9 +1,9 @@
 # Manifest to configure IcingaWeb
 class icinga_web {
-  include ::icinga-rpm-snapshot
-  include ::php
-  include ::mysql
-  include ::pgsql
+  include ['::icinga_rpm_snapshot']
+  include ['::php']
+  include ['::mysql']
+  include ['::pgsql']
 
   php::extension { ['php-mysql']:
     require => [ Class['mysql'] ],

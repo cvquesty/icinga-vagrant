@@ -12,23 +12,23 @@
 #
 # Sample Usage:
 #
-#   include icinga
-#   include icinga-idoutils-libdbi-mysql
+#   include ['::icinga']
+#   include ['::icinga_idoutils_libdbi_mysql']
 #
 
 class icinga {
-  include ::icinga-rpm-snapshot
+  include ['::icinga_rpm_snapshot']
 
   package { 'icinga':
     ensure  => 'installed',
-    require => Class['icinga-rpm-snapshot'],
+    require => Class['icinga_rpm_snapshot'],
     alias   => 'icinga',
   }
 
   package { 'icinga-doc':
     ensure  => 'installed',
     alias   => 'icinga-doc',
-    require => Class['icinga-rpm-snapshot'],
+    require => Class['icinga_rpm_snapshot'],
   }
 
   service { 'icinga':
@@ -46,12 +46,12 @@ class icinga {
 
 # Icinga IdoUtils - libDBI for MySQL
 class icinga_idoutils_libdbi_mysql {
-  include ::icinga-rpm-snapshot
-  include ::mysql
+  include ['::icinga_rpm_snapshot']
+  include ['::mysql']
 
   package { 'icinga-idoutils-libdbi-mysql':
     ensure  => 'installed',
-    require => Class['icinga-rpm-snapshot'],
+    require => Class['icinga_rpm_snapshot'],
     alias   => 'icinga-idoutils-libdbi-mysql',
   }
 

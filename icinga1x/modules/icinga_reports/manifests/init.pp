@@ -1,7 +1,7 @@
 # Class: icinga-reports
 #
 #   Downloads & installs Icinga Reports into Jasperserver/Tomcat
-#   
+#
 #   Copyright (C) 2014-present Icinga Development Team (http://www.icinga.org/)
 #
 # Parameters:
@@ -12,14 +12,14 @@
 #
 # Sample Usage:
 #
-#   include jasperserver
+#   include ['::jasperserver']
 #
 
 class icinga_reports {
-  include ::mysql
-  include ::tomcat6
-  include ::jasperserver
-  include ::php
+  include ['::mysql']
+  include ['::tomcat6']
+  include ['::jasperserver']
+  include ['::php']
 
   package { 'unzip':
     ensure => 'installed',
@@ -47,9 +47,9 @@ class icinga_reports {
   exec { 'get-icinga-reports':
     path     => '/bin:/usr/bin:/sbin:/usr/sbin',
     command  => "/usr/bin/wget -O /tmp/icinga-reports-${icingaReportsVersion}.zip https://github.com/Icinga/icinga-reports/archive/v${icingaReportsVersion}.zip",
-    timeout  => 0,
+    timeout  => '0',
     provider => 'shell',
-    user     => root,
+    user     => 'root',
     onlyif   => "test ! -f /tmp/icinga-reports-${icingaReportsVersion}.zip",
   }
 

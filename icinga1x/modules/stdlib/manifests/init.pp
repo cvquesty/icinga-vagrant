@@ -15,6 +15,6 @@
 #
 class stdlib {
 
-  class { 'stdlib::stages': }
+  class { '::stdlib::stages': }
 
 }

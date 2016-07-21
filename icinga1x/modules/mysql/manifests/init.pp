@@ -20,11 +20,12 @@ class mysql {
 
   Exec { path => '/usr/bin' }
 
-  package {
-    'mysql':
-      ensure => installed;
-    'mysql-server':
-      ensure => installed;
+  package { 'mysql':
+      ensure => 'installed',
+  }
+
+  package { 'mysql-server':
+      ensure => 'installed',
   }
 
   service { 'mysqld':

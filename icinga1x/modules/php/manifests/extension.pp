@@ -17,8 +17,8 @@ define php::extension(
   $ensure=installed
 ) {
 
-  include ::apache
-  include ::php
+  include ['::apache']
+  include ['::php']
 
   if $::require {
     $require_ = [Package['apache'], Class['php'], $::require]

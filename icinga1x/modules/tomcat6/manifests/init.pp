@@ -20,7 +20,7 @@ class tomcat6 (
   $java_opts   = '-Djava.awt.headless=true -Xmx128m -XX:+UseConcMarkSweepGC',
   $lang        = 'en_US') {
 
-  include ::tomcat6::params
+  include ['::tomcat6::params']
 
   if $tomcat_user == '' {
     $tomcat_user_internal = $tomcat6::params::tomcat_user

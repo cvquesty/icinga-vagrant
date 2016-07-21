@@ -12,7 +12,7 @@
 #
 # Sample Usage:
 #
-#   include icinga-rpm-snapshot
+#   include ['::icinga-rpm-snapshot']
 #
 class icinga_rpm_snapshot {
   yumrepo { 'icinga-rpm-snapshot':

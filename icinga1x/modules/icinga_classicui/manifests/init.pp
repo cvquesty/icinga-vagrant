@@ -12,12 +12,12 @@
 #
 # Sample Usage:
 #
-#   include icinga-classicui
+#   include ['::icinga-classicui']
 #
 
 class icinga_classicui {
-  include ::icinga_rpm_snapshot
-  include ::icinga
+  include ['::icinga_rpm_snapshot']
+  include ['::icinga']
 
   package { 'icinga-gui':
     ensure => 'installed',

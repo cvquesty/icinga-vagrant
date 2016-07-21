@@ -32,7 +32,7 @@ apache::vhost { 'vagrant-demo.icinga.org':
 }
 
 apache::vhost { 'vagrant-demo.icinga.org-ssl':
-  priority   => 5,
+  priority   => '5',
   port       => '443',
   docroot    => '/var/www/html',
   ssl        => true,

@@ -16,7 +16,7 @@
 #
 
 class nagios_plugins {
-  include ::epel
+  include ['::epel']
 
   # nagios plugins from epel
   package { 'nagios-plugins-all':

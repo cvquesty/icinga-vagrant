@@ -1,35 +1,37 @@
+# Icinga2 Classic UI Manifest
+#
 class icinga2_classicui {
-  include icinga-rpm-snapshot
-  include icinga2
+  include ['::icinga_rpm_snapshot']
+  include ['::icinga2']
 
   # workaround for package conflicts
   # icinga-gui pulls icinga-gui-config automatically
   package { 'icinga2_classicui-config':
-    ensure => latest,
-    before => Package["icinga-gui"],
+    ensure  => 'latest',
+    before  => Package['icinga-gui'],
     require => Class['icinga-rpm-snapshot'],
-    notify => Service['apache']
+    notify  => Service['apache'],
   }
 
   package { 'icinga-gui':
-    ensure => latest,
-    alias => 'icinga-gui'
+    ensure => 'latest',
+    alias  => 'icinga-gui',
   }
 
   # runtime users
   group { 'icingacmd':
-    ensure => present
+    ensure => 'present',
   }
 
   user { 'icinga':
-    ensure => present,
-    groups => 'icingacmd',
-    managehome => false
+    ensure     => 'present',
+    groups     => 'icingacmd',
+    managehome => false,
   }
 
   user { 'apache':
-    groups => ['icingacmd', 'vagrant'],
-    require => [ Class['apache'], Group['icingacmd'] ]
+    groups  => ['icingacmd', 'vagrant'],
+    require => [ Class['apache'], Group['icingacmd'] ],
   }
 
   icinga2::feature { 'statusdata': }

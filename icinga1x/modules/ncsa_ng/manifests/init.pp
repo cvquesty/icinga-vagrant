@@ -3,8 +3,8 @@
 #   This class installs nsca-ng components
 #
 class nsca_ng {
-  include ::nsca_ng_server
-  include ::nsca_ng_client
+  include ['::nsca_ng_server']
+  include ['::nsca_ng_client']
 }
 
 # Class: nsca-ng-server

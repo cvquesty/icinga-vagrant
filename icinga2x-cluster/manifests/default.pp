@@ -1,13 +1,13 @@
 # Default Manifest to setup an Icinga2 Cluster
 #
-include ::icinga_rpm
-include ::epel
-include ::mysql::server
-include ::icinga2
-include ::icinga2_ido_mysql
-include ::icingaweb2
-include ::icingaweb2_internal_db_mysql
-include ::monitoring_plugins
+include ['::icinga_rpm']
+include ['::epel']
+include ['::mysql::server']
+include ['::icinga2']
+include ['::icinga2_ido_mysql']
+include ['::icingaweb2']
+include ['::icingaweb2_internal_db_mysql']
+include ['::monitoring_plugins']
 
 icingaweb2::module { [ 'businessprocess', 'pnp' ]:
   builtin => false,
@@ -23,7 +23,7 @@ class { '::apache':
   default_vhost => false,
 }
 
-class {'::apache::mod::php': }
+class { '::apache::mod::php': }
 
 apache::vhost { 'vagrant-demo.icinga.org':
   priority => '5',
@@ -36,8 +36,8 @@ apache::vhost { 'vagrant-demo.icinga.org':
   ],
 }
 
-include ::php::cli
-include ::php::mod_php5
+include ['::php::cli']
+include ['::php::mod_php5']
 
 php::ini { '/etc/php.ini':
   display_errors    => 'On',
@@ -71,7 +71,7 @@ package { [ 'mailx', 'tree', 'gdb', 'rlwrap', 'git', 'bash-completion' ]:
 @user { 'vagrant': ensure => present }
 User<| title == vagrant |>{
   groups +> ['icinga', 'icingacmd'],
-  require => Package['icinga2']
+  require => Package['icinga2'],
 }
 
 file { '/etc/motd':
