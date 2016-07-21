@@ -1,4 +1,4 @@
-# Class: icinga-rpm-snapshot
+# Class: icinga_rpm_snapshot
 #
 #   Configure icinga rpm snaphot repository
 #
@@ -12,10 +12,10 @@
 #
 # Sample Usage:
 #
-#   include ['::icinga-rpm-snapshot']
+#   include ['::icinga_rpm_snapshot']
 #
 class icinga_rpm_snapshot {
-  yumrepo { 'icinga-rpm-snapshot':
+  yumrepo { 'icinga_rpm_snapshot':
     baseurl  => 'http://packages.icinga.org/epel/6/snapshot/',
     enabled  => '1',
     gpgcheck => '1',
@@ -31,9 +31,8 @@ class icinga_rpm_snapshot {
     source => 'puppet:////vagrant/files/etc/pki/rpm-gpg/RPM-GPG-KEY-ICINGA',
   }
 
-  icinga-rpm-snapshot::key { 'RPM-GPG-KEY-ICINGA':
+  icinga_rpm_snapshot::key { 'RPM-GPG-KEY-ICINGA':
     path   => '/etc/pki/rpm-gpg/RPM-GPG-KEY-ICINGA',
-    before => Yumrepo['icinga-rpm-snapshot'],
+    before => Yumrepo['icinga_rpm_snapshot'],
   }
 }
-
