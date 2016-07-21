@@ -28,25 +28,25 @@ class mysql {
   }
 
   service { 'mysqld':
-    enable => true,
-    ensure => running,
-    require => Package['mysql-server']
+    ensure  => 'running',
+    enable  => true,
+    require => Package['mysql-server'],
   }
 
-  exec {"setmysqlpassword":
+  exec {'setmysqlpassword':
     command => "mysqladmin -u root PASSWORD ${mysqlRootPassword}; /bin/true",
-    require => [Package["mysql-server"], Package["mysql"] , Service["mysqld"]],
+    require => [Package['mysql-server'], Package['mysql'] , Service['mysqld']],
   }
 
   file { '/etc/my.cnf':
     content => template('mysql/my.cnf.erb'),
     require => Package['mysql-server'],
-    notify => Service['mysqld']
+    notify  => Service['mysqld'],
   }
 
   file { [ '/root/.my.cnf', '/home/vagrant/.my.cnf']:
     content => template('mysql/.my.cnf.erb'),
     require => Package['mysql-server'],
-    notify => Service['mysqld']
+    notify  => Service['mysqld'],
   }
 }

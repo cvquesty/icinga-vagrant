@@ -1,4 +1,4 @@
-# Class: nagios-plugins
+# Class: nagios_plugins
 #
 #   Install nagios plugins
 #
@@ -12,15 +12,15 @@
 #
 # Sample Usage:
 #
-#   include nagios-plugins
+#   include nagios_plugins
 #
 
-class nagios-plugins {
-  include epel
+class nagios_plugins {
+  include ::epel
 
   # nagios plugins from epel
   package { 'nagios-plugins-all':
-    ensure => installed,
-    require => Class['epel']
+    ensure  => 'installed',
+    require => Class['epel'],
   }
 }

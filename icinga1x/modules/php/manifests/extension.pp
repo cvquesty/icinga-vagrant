@@ -17,8 +17,8 @@ define php::extension(
   $ensure=installed
 ) {
 
-  include apache
-  include php
+  include ::apache
+  include ::php
 
   if $::require {
     $require_ = [Package['apache'], Class['php'], $::require]
@@ -27,8 +27,8 @@ define php::extension(
   }
 
   package { $name:
-    ensure => $ensure,
+    ensure  => $ensure,
     require => $require_,
-    notify => Service['apache']
+    notify  => Service['apache'],
   }
 }

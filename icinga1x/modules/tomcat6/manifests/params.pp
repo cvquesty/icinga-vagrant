@@ -1,3 +1,5 @@
+# Main Tomcat6 Parameters Manifest
+#
 class tomcat6::params {
   case $::osfamily {
     'RedHat': {

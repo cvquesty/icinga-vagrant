@@ -17,9 +17,10 @@
 
 class tomcat6 (
   $tomcat_user = '',
-  $java_opts = '-Djava.awt.headless=true -Xmx128m -XX:+UseConcMarkSweepGC',
-  $lang = 'en_US') {
-  include tomcat6::params
+  $java_opts   = '-Djava.awt.headless=true -Xmx128m -XX:+UseConcMarkSweepGC',
+  $lang        = 'en_US') {
+
+  include ::tomcat6::params
 
   if $tomcat_user == '' {
     $tomcat_user_internal = $tomcat6::params::tomcat_user
@@ -30,24 +31,24 @@ class tomcat6 (
   Package['tomcat6'] -> File[$tomcat6::params::tomcat_settings] -> Service['tomcat6']
 
   package { 'tomcat6':
-    ensure => installed
+    ensure => 'installed',
   }
 
   file { $tomcat6::params::tomcat_settings:
-    ensure => present,
-    content => template('tomcat6/tomcat6.erb')
+    ensure  => 'present',
+    content => template('tomcat6/tomcat6.erb'),
   }
 
   exec { 'iptables-allow-http-8080':
-    path => '/bin:/usr/bin:/sbin:/usr/sbin',
-    unless => 'grep -Fxqe "-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT" /etc/sysconfig/iptables',
-    command => 'lokkit --enabled --port=8080:tcp'
+    path    => '/bin:/usr/bin:/sbin:/usr/sbin',
+    unless  => 'grep -Fxqe "-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT" /etc/sysconfig/iptables',
+    command => 'lokkit --enabled --port=8080:tcp',
   }
 
   service { 'tomcat6':
-    ensure => running,
-    enable => true,
+    ensure     => 'running',
+    enable     => true,
     hasrestart => true,
-    hasstatus => true
+    hasstatus  => true,
   }
 }
