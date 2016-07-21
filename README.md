@@ -2,6 +2,7 @@
 
 Icinga Vagrant boxes used for development, tests and demo cases.
 
+
 * [Icinga 2 Standalone](README.md#icinga2x)
 * [Icinga 2 Cluster](README.md#icinga2x-cluster)
 * [Icinga 2 and Graylog](README.md#icinga2x-graylog)
