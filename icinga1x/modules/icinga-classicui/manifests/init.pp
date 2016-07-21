@@ -15,28 +15,28 @@
 #   include icinga-classicui
 #
 
-class icinga-classicui {
-  include icinga-rpm-snapshot
-  include icinga
+class icinga_classicui {
+  include ::icinga_rpm_snapshot
+  include ::icinga
 
   package { 'icinga-gui':
-    ensure => installed,
-    alias => 'icinga-gui'
+    ensure => 'installed',
+    alias  => 'icinga-gui',
   }
 
   # runtime users
   group { 'icingacmd':
-    ensure => present
+    ensure => 'present',
   }
 
   user { 'icinga':
-    ensure => present,
-    groups => 'icingacmd',
-    managehome => false
+    ensure     => 'present',
+    groups     => 'icingacmd',
+    managehome => false,
   }
 
   user { 'apache':
-    groups => ['icingacmd', 'vagrant'],
-    require => [ Class['apache'], Group['icingacmd'] ]
+    groups  => ['icingacmd', 'vagrant'],
+    require => [ Class['apache'], Group['icingacmd'] ],
   }
 }
