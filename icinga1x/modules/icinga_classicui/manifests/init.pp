@@ -1,4 +1,4 @@
-# Class: icinga-classicui
+# Class: icinga_classicui
 #
 #   Install Icinga Classic UI with Icinga 1.x configuration
 #
@@ -12,7 +12,7 @@
 #
 # Sample Usage:
 #
-#   include ['::icinga-classicui']
+#   include ['::icinga_classicui']
 #
 
 class icinga_classicui {

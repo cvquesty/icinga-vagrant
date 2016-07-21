@@ -1,12 +1,12 @@
 # Icinga Default Vagrant Installation Manifest
 #
-include ::apache
-include ::icinga
-include ::icinga-classicui
-include ::icinga-idoutils-libdbi-mysql
-include ::icinga-web
-include ::icinga-reports
-include ::nagios-plugins
+include ['::apache']
+include ['::icinga']
+include ['::icinga_classicui']
+include ['::icinga_idoutils_libdbi_mysql']
+include ['::icinga_web']
+include ['::icinga_reports']
+include ['::nagios_plugins']
 
 package { 'vim-enhanced':
   ensure => 'installed',
