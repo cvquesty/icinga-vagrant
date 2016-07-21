@@ -1,13 +1,13 @@
 # Default Build Manifest for Icinga2
 #
-include ::icinga_rpm
-include ::epel
-include ::mysql::server
-include ::icinga2
-include ::icinga2_ido_mysql
-include ::icingaweb2
-include ::icingaweb2_internal_db_mysql
-include ::monitoring_plugins
+include ['::icinga_rpm']
+include ['::epel']
+include ['::mysql::server']
+include ['::icinga2']
+include ['::icinga2_ido_mysql']
+include ['::icingaweb2']
+include ['::icingaweb2_internal_db_mysql']
+include ['::monitoring_plugins']
 
 ####################################
 # Webserver
@@ -45,8 +45,8 @@ apache::vhost { 'vagrant-demo.icinga.org-ssl':
     ],
   }
 
-include ::php::cli
-include ::php::mod_php5
+include ['::php::cli']
+include ['::php::mod_php5']
 
 php::ini { '/etc/php.ini':
   display_errors    => 'On',
@@ -220,7 +220,7 @@ file { '/etc/icingaweb2/enabledModules/icinga2':
 # PNP
 ####################################
 
-include ::pnp4nagios
+include ['::pnp4nagios']
 
 icinga2::feature { 'perfdata': }
 
@@ -313,7 +313,7 @@ exec { 'feed-tts-comments-host':
 # NagVis
 ####################################
 
-include ::nagvis
+include ['::nagvis']
 
 icingaweb2::module { 'nagvis':
   builtin => false,
