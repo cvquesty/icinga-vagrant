@@ -16,24 +16,27 @@ class snmp {
 
   Exec { path => '/usr/bin' }
 
-  package {
-    'net-snmp':
-      ensure => installed;
-    'net-snmp-perl':
-      ensure => installed;
-    'perl-Net-SNMP':
-      ensure => installed;
+  package { 'net-snmp':
+    ensure => 'installed',
+  }
+
+  package { 'net-snmp-perl':
+    ensure => 'installed',
+  }
+
+  package { 'perl-Net-SNMP':
+    ensure => 'installed',
   }
 
   service { 'snmpd':
-    enable => true,
-    ensure => running,
-    require => Package['net-snmp']
+    ensure  => 'running',
+    enable  => true,
+    require => Package['net-snmp'],
   }
 
   file { '/etc/snmp/snmpd.conf':
     content => template('snmp/snmpd.conf.erb'),
     require => Package['net-snmp'],
-    notify => Service['snmpd']
+    notify  => Service['snmpd'],
   }
 }
