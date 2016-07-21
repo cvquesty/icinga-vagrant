@@ -3,10 +3,10 @@
 # OSMC demo config
 # admin pw: admin
 
-include epel
+include ::epel
 
-$graylog_version = "1.2"
-$elasticsearch_version = ""
+$graylog_version       = '1.2'
+$elasticsearch_version = ''
 
 # basic stuff
 # fix puppet warning.
@@ -19,13 +19,13 @@ if versioncmp($::puppetversion,'3.6.1') >= 0 {
 }
 
 package { [ 'vim-enhanced', 'mailx', 'tree', 'gdb', 'rlwrap', 'git' ]:
-  ensure => 'installed',
-  require => Class['Epel']
+  ensure  => 'installed',
+  require => Class['Epel'],
 }
 
 # Webserver
 
-class {'apache':
+class {'::apache':
   # don't purge php, icingaweb2, etc configs
   purge_configs => false,
 }
@@ -36,10 +36,10 @@ include '::php::cli'
 include '::php::mod_php5'
 
 php::ini { '/etc/php.ini':
-  display_errors => 'On',
-  memory_limit => '256M',
-  date_timezone => 'Europe/Berlin',
-  session_save_path => '/var/lib/php/session'
+  display_errors    => 'On',
+  memory_limit      => '256M',
+  date_timezone     => 'Europe/Berlin',
+  session_save_path => '/var/lib/php/session',
 }
 
 # Elasticsearch
@@ -48,20 +48,23 @@ file { '/etc/security/limits.d/99-elasticsearch.conf':
   owner   => 'root',
   group   => 'root',
   mode    => '0644',
-  content => "elasticsearch soft nofile 64000\nelasticsearch hard nofile 64000\n",
+  content => 'elasticsearch soft nofile 64000\nelasticsearch hard nofile 64000\n',
 } ->
-class { 'java':
+
+class { '::java':
 } ->
-class { 'elasticsearch':
+
+class { '::elasticsearch':
   version      => '1.7.3-1',
   manage_repo  => true,
   repo_version => '1.7',
   java_install => false,
 } ->
+
 elasticsearch::instance { 'graylog-es':
-  config => {
+  config        => {
     'cluster.name' => 'graylog',
-    'network.host' => '127.0.0.1'
+    'network.host' => '127.0.0.1',
   },
   init_defaults => {
     'ES_HEAP_SIZE' => '256m',
@@ -76,81 +79,82 @@ class { '::mongodb::server': }
 
 
 # Graylog
-class { 'graylog2::repo':
+class { '::graylog2::repo':
   version => $graylog_version,
 } ->
-class { 'graylog2::server':
-  service_enable	     => true,
-  service_ensure	     => true,
-  rest_enable_cors           => true,
-  rest_listen_uri            => "http://${::ipaddress}:12900/",
-  rest_transport_uri         => "http://${::ipaddress}:12900/",
+
+class { '::graylog2::server':
+  service_enable                                     => true,
+  service_ensure                                     => true,
+  rest_enable_cors                                   => true,
+  rest_listen_uri                                    => "http://${::ipaddress}:12900/",
+  rest_transport_uri                                 => "http://${::ipaddress}:12900/",
   elasticsearch_discovery_zen_ping_multicast_enabled => false,
   elasticsearch_discovery_zen_ping_unicast_hosts     => '127.0.0.1:9300',
-  elasticsearch_network_host => '127.0.0.1',
-  password_secret            => '3eb06615884fec5ae541b8661b430e8da89ed5fddf81c4bdc6a2a714abb9b51d',
-  root_password_sha2         => '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
-  elasticsearch_cluster_name => 'graylog',
-  java_opts                  => '-Xms256m -Xmx512m -XX:NewRatio=1 -XX:PermSize=128m -XX:MaxPermSize=256m -server -XX:+ResizeTLAB -XX:+UseConcMarkSweepGC -XX:+CMSConcurrentMTEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:-OmitStackTraceInFastThrow',
-  require                    => [
+  elasticsearch_network_host                         => '127.0.0.1',
+  password_secret                                    => '3eb06615884fec5ae541b8661b430e8da89ed5fddf81c4bdc6a2a714abb9b51d',
+  root_password_sha2                                 => '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
+  elasticsearch_cluster_name                         => 'graylog',
+  java_opts                                          => '-Xms256m -Xmx512m -XX:NewRatio=1 -XX:PermSize=128m -XX:MaxPermSize=256m -server -XX:+ResizeTLAB -XX:+UseConcMarkSweepGC -XX:+CMSConcurrentMTEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:-OmitStackTraceInFastThrow',
+  require                                            => [
     Elasticsearch::Instance['graylog-es'],
     Class['mongodb::server'],
     Class['graylog2::repo'],
-  ],
-} ->
-class { 'graylog2::web':
-  application_secret => '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
+  ], } ->
+
+class { '::graylog2::web':
+  application_secret   => '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
   graylog2_server_uris => [ "http://${::ipaddress}:12900/" ],
-  require            => Class['graylog2::server'],
-  timeout            => '60s',
+  require              => Class['graylog2::server'],
+  timeout              => '60s',
 } ->
 # check-graylog2-stream
 package { 'check-graylog2-stream':
-  ensure => '1.2-1',
-  require => Class['graylog2::server']
+  ensure  => '1.2-1',
+  require => Class['graylog2::server'],
 } ->
 file { '/usr/lib/nagios/plugins/check-graylog2-stream-wrapper':
-  ensure  => present,
-  owner   => 'root',
-  group   => 'root',
-  mode    => '0555',
-  source  => 'file:///vagrant/scripts/check-graylog2-stream-wrapper.sh',
+  ensure => 'present',
+  owner  => 'root',
+  group  => 'root',
+  mode   => '0555',
+  source => 'file:///vagrant/scripts/check-graylog2-stream-wrapper.sh',
 }
 
 
 # Icinga 2
-class { 'icinga_rpm':
-  pkg_repo_version => 'release'
+class { '::icinga_rpm':
+  pkg_repo_version => 'release',
 }
 
 include '::mysql::server'
-include icinga2
-include icinga2_ido_mysql
-include icingaweb2
-include icingaweb2_internal_db_mysql
-include monitoring_plugins
+include ::icinga2
+include ::icinga2_ido_mysql
+include ::icingaweb2
+include ::icingaweb2_internal_db_mysql
+include ::monitoring_plugins
 
 file { '/etc/icinga2/conf.d/api-users.conf':
-  owner  => icinga,
-  group  => icinga,
-  content   => template("icinga2/api-users.conf.erb"),
-  require   => Package['icinga2'],
-  notify    => Service['icinga2']
+  owner   => 'icinga',
+  group   => 'icinga',
+  content => template('icinga2/api-users.conf.erb'),
+  require => Package['icinga2'],
+  notify  => Service['icinga2'],
 }
 
 file { '/etc/icinga2/conf.d/demo.conf':
-  owner  => icinga,
-  group  => icinga,
-  content   => template("icinga2/graylog2-demo.conf.erb"),
-  require   => Package['icinga2'],
-  notify    => Service['icinga2']
-} ->
-icinga2::feature { 'gelf':
-} ->
+  owner   => 'icinga',
+  group   => 'icinga',
+  content => template('icinga2/graylog2-demo.conf.erb'),
+  require => Package['icinga2'],
+  notify  => Service['icinga2'] } ->
+
+icinga2::feature { 'gelf': } ->
+
 file { '/usr/lib/nagios/plugins/check-graylog-stream':
-  ensure => symlink,
-  target => '/usr/lib64/nagios/plugins/check-graylog2-stream',
-  force => true,
+  ensure  => 'link',
+  target  => '/usr/lib64/nagios/plugins/check-graylog2-stream',
+  force   => true,
   replace => true,
-  require => [ Package['check-graylog2-stream'], Class['monitoring_plugins'] ]
+  require => [ Package['check-graylog2-stream'], Class['monitoring_plugins'] ],
 }
