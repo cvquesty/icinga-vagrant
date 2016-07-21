@@ -16,7 +16,7 @@ Refs #2282
  .../modules/tomcat6/templates/tomcat6.erb          |  47 ++++++++
  Vagrantfile                                        |   3 +
  10 files changed, 473 insertions(+)
- create mode 100644 .vagrant-puppet/modules/icinga-reports/manifests/init.pp
+ create mode 100644 .vagrant-puppet/modules/icinga_reports/manifests/init.pp
  create mode 100644 .vagrant-puppet/modules/jasperserver/manifests/init.pp
  create mode 100755 .vagrant-puppet/modules/jasperserver/templates/default_master.properties.erb
  create mode 100644 .vagrant-puppet/modules/mysql/templates/.my.cnf.erb
@@ -48,10 +48,10 @@ index 0000000..d4c26f5
 --- /dev/null
 +++ b/.vagrant-puppet/modules/icinga-reports/manifests/init.pp
 @@ -0,0 +1,99 @@
-+# Class: icinga-reports
++# Class: icinga_reports
 +#
 +#   Downloads & installs Icinga Reports into Jasperserver/Tomcat
-+#   
++#
 +#   Copyright (C) 2014-present Icinga Development Team (http://www.icinga.org/)
 +#
 +# Parameters:
@@ -65,7 +65,7 @@ index 0000000..d4c26f5
 +#   include jasperserver
 +#
 +
-+class icinga-reports {
++class icinga_reports {
 +  include mysql
 +  include tomcat6
 +  include jasperserver
@@ -114,10 +114,10 @@ index 0000000..d4c26f5
 +    require => [ Package['mysql-connector-java'], Package['tomcat6'] ],
 +  }
 +
-+  exec { 'install-tomcat-mysql-connector-restart-tomcat': 
++  exec { 'install-tomcat-mysql-connector-restart-tomcat':
 +    path => "/bin:/usr/bin:/sbin:/usr/sbin",
 +    command => "/etc/init.d/${tomcatName} restart",
-+    require => Exec['install-tomcat-mysql-connector']  
++    require => Exec['install-tomcat-mysql-connector']
 +  }
 +
 +  exec { 'js-import-icinga':
@@ -156,7 +156,7 @@ index 0000000..5779b70
 +# Class: jasperserver
 +#
 +#   Downloads & installs Jasperserver with Tomcat & MySQL
-+#   
++#
 +#   Copyright (C) 2014-present Icinga Development Team (http://www.icinga.org/)
 +#
 +# Parameters:
@@ -171,8 +171,8 @@ index 0000000..5779b70
 +#
 +
 +class jasperserver {
-+  include mysql
-+  include tomcat6
++  include ['::mysql']
++  include ['::tomcat6']
 +
 +  $jasperVersion = "5.5.0"
 +  $jasperHome = "/opt/jasperreports-server-cp-${jasperVersion}-bin"
@@ -259,7 +259,7 @@ index 0000000..5779b70
 +    require => File["${jasperHome}/buildomatic/default_master.properties"],
 +    cwd => "${jasperHome}/buildomatic",
 +  }
-+    
++
 +  exec { 'import-jasperserver-schema-quartz':
 +    path => "/bin:/usr/bin:/sbin:/usr/sbin",
 +    unless => "mysql -u${jasperDbUsername} -p${jasperDbPassword} ${jasperDbName} -e 'SELECT * FROM QRTZ_CALENDARS LIMIT 1'",
