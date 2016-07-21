@@ -1,6 +1,6 @@
-
-
+# Icinga RPM key Import Manifest
 # inspired by https://github.com/stahnma/puppet-module-epel/blob/master/manifests/rpm_gpg_key.pp
+#
 
 define icinga_rpm::key($path) {
   exec { "import-key-${name}":
