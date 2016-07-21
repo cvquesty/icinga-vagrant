@@ -1,9 +1,11 @@
+# Nagios Monitoring Plugins Installation Manifest
+#
 class monitoring_plugins {
-  include epel
+  include ::epel
 
   # nagios plugins from epel
   package { 'nagios-plugins-all':
-    ensure => installed,
-    require => Class['epel']
+    ensure  => 'installed',
+    require => Class['epel'],
   }
 }
