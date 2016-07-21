@@ -1,3 +1,5 @@
+# PBP4Nagios Installation Manifest
+#
 class pnp4nagios::install {
   $ensure = $pnp4nagios::params::ensure
 

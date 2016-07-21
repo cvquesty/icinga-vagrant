@@ -1,7 +1,9 @@
+# Main PNP4Nagios Entry Point
+#
 class pnp4nagios {
-  class{'pnp4nagios::params':} ->
-  class{'pnp4nagios::install':} ->
-  class{'pnp4nagios::config':} ->
-  class{'pnp4nagios::service':} ->
-  Class["pnp4nagios"]
+
+  include [ '::pnp4nagios::params' ]
+  include [ '::pnp4nagios::install' ]
+  include [ '::pnp4nagios::config' ]
+  include [ '::pnp4nagios::service' ]
 }
