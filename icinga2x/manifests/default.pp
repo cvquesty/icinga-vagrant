@@ -1,19 +1,19 @@
 # Default Build Manifest for Icinga2
 #
-include ['::icinga_rpm']
-include ['::epel']
-include ['::mysql::server']
-include ['::icinga2']
-include ['::icinga2_ido_mysql']
-include ['::icingaweb2']
-include ['::icingaweb2_internal_db_mysql']
-include ['::monitoring_plugins']
+include [ '::icinga_rpm' ]
+include [ '::epel' ]
+include [ '::mysql::server' ]
+include [ '::icinga2' ]
+include [ '::icinga2_ido_mysql' ]
+include [ '::icingaweb2' ]
+include [ '::icingaweb2_internal_db_mysql' ]
+include [ '::monitoring_plugins' ]
 
 ####################################
 # Webserver
 ####################################
 
-class {'::apache':
+class { '::apache':
   purge_configs => false,
   default_vhost => false,
 }
@@ -44,8 +44,8 @@ apache::vhost { 'vagrant-demo.icinga.org-ssl':
     ],
   }
 
-include ['::php::cli']
-include ['::php::mod_php5']
+include [ '::php::cli' ]
+include [ '::php::mod_php5' ]
 
 php::ini { '/etc/php.ini':
   display_errors    => 'On',
@@ -57,8 +57,7 @@ php::ini { '/etc/php.ini':
 ####################################
 # Misc
 ####################################
-# fix puppet warning.
-# https://ask.puppetlabs.com/question/6640/warning-the-package-types-allow_virtual-parameter-will-be-changing-its-default-value-from-false-to-true-in-a-future-release/
+
 if versioncmp($::puppetversion,'3.6.1') >= 0 {
   $allow_virtual_packages = hiera('allow_virtual_packages',false)
   Package {
@@ -68,7 +67,7 @@ if versioncmp($::puppetversion,'3.6.1') >= 0 {
 
 package { [ 'mailx', 'tree', 'gdb', 'git', 'bash-completion', 'screen', 'htop' ]:
   ensure  => 'installed',
-  require => Class['epel'],
+  require => Class[ 'epel' ],
 }
 
 @user { 'vagrant':
@@ -77,7 +76,7 @@ package { [ 'mailx', 'tree', 'gdb', 'git', 'bash-completion', 'screen', 'htop' ]
 
 User<| title == vagrant |>{
   groups  +> ['icinga', 'icingacmd'],
-  require => Package['icinga2']
+  require => Package[ 'icinga2' ],
 }
 
 file { '/etc/motd':
@@ -101,23 +100,23 @@ class { '::vim':
 
 file { '/etc/icinga2':
   ensure  => 'directory',
-  require => Package['icinga2'],
+  require => Package[ 'icinga2' ],
 }
 
 file { '/etc/icinga2/icinga2.conf':
   owner   => 'icinga',
   group   => 'icinga',
   source  => 'puppet:////vagrant/files/etc/icinga2/icinga2.conf',
-  require => File['/etc/icinga2'],
-  notify  => Service['icinga2'],
+  require => File[ '/etc/icinga2' ],
+  notify  => Service[ 'icinga2' ],
 }
 
 file { '/etc/icinga2/zones.conf':
   owner   => 'icinga',
   group   => 'icinga',
   source  => 'puppet:////vagrant/files/etc/icinga2/zones.conf',
-  require => Package['icinga2'],
-  notify  => Service['icinga2'],
+  require => Package[ 'icinga2' ],
+  notify  => Service[ 'icinga2' ],
 }
 
 # enable the command pipe
@@ -127,32 +126,32 @@ file { '/etc/icinga2/conf.d/hosts.conf':
   owner   => 'icinga',
   group   => 'icinga',
   source  => 'puppet:////vagrant/files/etc/icinga2/conf.d/hosts.conf',
-  require => Package['icinga2'],
-  notify  => Service['icinga2'],
+  require => Package[ 'icinga2' ],
+  notify  => Service[ 'icinga2' ],
 }
 
 file { '/etc/icinga2/conf.d/additional_services.conf':
   owner   => 'icinga',
   group   => 'icinga',
   source  => 'puppet:////vagrant/files/etc/icinga2/conf.d/additional_services.conf',
-  require => Package['icinga2'],
-  notify  => Service['icinga2'],
+  require => Package[ 'icinga2' ],
+  notify  => Service[ 'icinga2' ],
 }
 
 # api
 exec { 'enable-icinga2-api':
   path    => '/bin:/usr/bin:/sbin:/usr/sbin',
   command => 'icinga2 api setup',
-  require => Package['icinga2'],
-  notify  => Service['icinga2'],
+  require => Package[ 'icinga2' ],
+  notify  => Service[ 'icinga2' ],
 }
 
 file { '/etc/icinga2/conf.d/api-users.conf':
   owner   => 'icinga',
   group   => 'icinga',
   content => template('icinga2/api-users.conf.erb'),
-  require => [ Package['icinga2'], Exec['enable-icinga2-api'] ],
-  notify  => Service['icinga2'],
+  require => [ Package[ 'icinga2' ], Exec[ 'enable-icinga2-api' ] ],
+  notify  => Service[ 'icinga2' ],
 }
 
 ####################################
@@ -165,7 +164,7 @@ file { '/etc/icingaweb2/preferences':
   owner   => 'root',
   group   => 'icingaweb2',
   mode    => '2770',
-  require => Package['icingaweb2'],
+  require => Package[ 'icingaweb2' ],
 }
 
 file { '/etc/icingaweb2/preferences/icingaadmin':
@@ -175,7 +174,7 @@ file { '/etc/icingaweb2/preferences/icingaadmin':
   group   => 'icingaweb2',
   mode    => '2770',
   source  => 'puppet:////vagrant/files/etc/icingaweb2/preferences/icingaadmin',
-  require => [ Package['icingaweb2'], File['/etc/icingaweb2/preferences'] ],
+  require => [ Package[ 'icingaweb2' ], File[ '/etc/icingaweb2/preferences' ] ],
 }
 
 # user-defined dashboards for the default 'icingaadmin' user
@@ -184,7 +183,7 @@ file { '/etc/icingaweb2/dashboards':
   owner   => 'root',
   group   => 'icingaweb2',
   mode    => '2770',
-  require => Package['icingaweb2'],
+  require => Package[ 'icingaweb2' ],
 }
 
 file { '/etc/icingaweb2/dashboards/icingaadmin':
@@ -194,32 +193,32 @@ file { '/etc/icingaweb2/dashboards/icingaadmin':
   group   => 'icingaweb2',
   mode    => '2770',
   source  => 'puppet:////vagrant/files/etc/icingaweb2/dashboards/icingaadmin',
-  require => [ Package['icingaweb2'], File['/etc/icingaweb2/dashboards'] ],
+  require => [ Package[ 'icingaweb2' ], File[ '/etc/icingaweb2/dashboards' ] ],
 }
 
 # present icinga2 in icingaweb2's module documentation
 file { '/usr/share/icingaweb2/modules/icinga2':
   ensure  => 'directory',
-  require => Package['icingaweb2'],
+  require => Package[ 'icingaweb2' ],
 }
 
 file { '/usr/share/icingaweb2/modules/icinga2/doc':
   ensure  => 'link',
   target  => '/usr/share/doc/icinga2/markdown',
-  require => [ Package['icinga2'], Package['icingaweb2'], File['/usr/share/icingaweb2/modules/icinga2'] ],
+  require => [ Package[ 'icinga2' ], Package[ 'icingaweb2' ], File[ '/usr/share/icingaweb2/modules/icinga2' ] ],
 }
 
 file { '/etc/icingaweb2/enabledModules/icinga2':
   ensure  => 'link',
   target  => '/usr/share/icingaweb2/modules/icinga2',
-  require => File['/etc/icingaweb2/enabledModules'],
+  require => File[ '/etc/icingaweb2/enabledModules' ],
 }
 
 ####################################
 # PNP
 ####################################
 
-include ['::pnp4nagios']
+include [ '::pnp4nagios' ]
 
 icinga2::feature { 'perfdata': }
 
@@ -235,8 +234,8 @@ file { 'pnp4nagios_httpd_config':
   group   => 'root',
   mode    => '0644',
   content => template('pnp4nagios/pnp4nagios.conf.erb'),
-  require => Class['apache'],
-  notify  => Class['apache::service'],
+  require => Class[ 'apache' ],
+  notify  => Class[ 'apache::service' ],
 }
 
 ####################################
@@ -249,7 +248,7 @@ file { 'check_mysql_health':
   group   => 'root',
   mode    => '0755',
   source  => 'puppet:////vagrant/files/usr/lib64/nagios/plugins/check_mysql_health',
-  require => Class['monitoring_plugins'],
+  require => Class[ 'monitoring_plugins' ],
 }
 
 file { '/etc/icinga2/bp':
@@ -258,8 +257,8 @@ file { '/etc/icinga2/bp':
   owner   => 'icinga',
   group   => 'icinga',
   source  => 'puppet:////vagrant/files/etc/icinga2/bp',
-  require => File['/etc/icinga2/icinga2.conf'],
-  notify  => Service['icinga2'],
+  require => File[ '/etc/icinga2/icinga2.conf' ],
+  notify  => Service[ 'icinga2' ],
 }
 
 icingaweb2::module { 'businessprocess':
@@ -273,7 +272,7 @@ file { '/etc/icingaweb2/modules/businessprocess':
   group   => 'icingaweb2',
   mode    => '2770',
   source  => 'puppet:////vagrant/files/etc/icingaweb2/modules/businessprocess',
-  require => Package['icingaweb2'],
+  require => Package[ 'icingaweb2' ],
 }
 
 ####################################
@@ -291,7 +290,7 @@ file { '/etc/icingaweb2/modules/generictts':
   group   => 'icingaweb2',
   mode    => '2770',
   source  => 'puppet:////vagrant/files/etc/icingaweb2/modules/generictts',
-  require => Package['icingaweb2'],
+  require => Package[ 'icingaweb2' ],
 }
 
 file { 'feed-tts-comments':
@@ -305,14 +304,14 @@ file { 'feed-tts-comments':
 exec { 'feed-tts-comments-host':
   path    => '/bin:/usr/bin:/sbin:/usr/sbin',
   command => '/usr/local/bin/feed-tts-comments',
-  require => [ File['feed-tts-comments'], Service['icinga2'] ],
+  require => [ File[ 'feed-tts-comments' ], Service[ 'icinga2' ] ],
 }
 
 ####################################
 # NagVis
 ####################################
 
-include ['::nagvis']
+include [ '::nagvis' ]
 
 icingaweb2::module { 'nagvis':
   builtin => false,
@@ -322,7 +321,7 @@ file { 'nagvis-link-css-styles':
   ensure  => 'link',
   path    => '/usr/local/nagvis/share/userfiles/styles/icingaweb-nagvis-integration.css',
   target  => '/usr/share/icingaweb2/modules/nagvis/public/css/icingaweb-nagvis-integration.css',
-  require => [ Class['nagvis'], File["${::icingaweb2::config_dir}/enabledModules/nagvis"] ],
+  require => [ Class[ 'nagvis' ], File[ "${::icingaweb2::config_dir}/enabledModules/nagvis" ] ],
 }
 
 file { 'nagvis-core-functions-index.php':
@@ -330,7 +329,7 @@ file { 'nagvis-core-functions-index.php':
   path    => '/usr/local/nagvis/share/server/core/functions/index.php',
   source  => 'puppet:////vagrant/files/usr/local/nagvis/share/server/core/functions/index.php',
   mode    => '0644',
-  require => Class['nagvis'],
+  require => Class[ 'nagvis' ],
 }
 
 file { 'nagvis-map-icinga2':
@@ -338,7 +337,7 @@ file { 'nagvis-map-icinga2':
   path    => '/usr/local/nagvis/etc/maps/icinga2.cfg',
   source  => 'puppet:////vagrant/files/usr/local/nagvis/etc/maps/icinga2.cfg',
   mode    => '0644',
-  require => Class['nagvis'],
+  require => Class[ 'nagvis' ],
 }
 ####################################
 # Director
@@ -358,7 +357,7 @@ file {'/etc/icingaweb2/modules/director':
   owner   => 'root',
   group   => 'icingaweb2',
   mode    => '2770',
-  require => [ Package['icingaweb2'], File['/etc/icingaweb2/modules'] ], } ->
+  require => [ Package[ 'icingaweb2' ], File[ '/etc/icingaweb2/modules' ] ], } ->
 
 file { '/etc/icingaweb2/modules/director/config.ini':
   ensure  => 'file',
@@ -366,19 +365,19 @@ file { '/etc/icingaweb2/modules/director/config.ini':
   group   => 'icingaweb2',
   mode    => '2770',
   source  => 'puppet:////vagrant/files/etc/icingaweb2/modules/director/config.ini',
-  require => File['/etc/icingaweb2/modules/director'] }->
+  require => File[ '/etc/icingaweb2/modules/director' ] }->
 
 exec { 'create-mysql-icingaweb2-director-db':
   path    => '/bin:/usr/bin:/sbin:/usr/sbin',
   unless  => 'mysql -udirector -pdirector director',
   command => 'mysql -uroot -e "CREATE DATABASE director; GRANT ALL ON director.* TO director@localhost IDENTIFIED BY \'director\';"',
-  require => Service['mariadb'], }->
+  require => Service[ 'mariadb' ], }->
 
 exec { 'Icinga Director DB migration':
   path    => '/usr/local/bin:/usr/bin:/bin',
   command => 'icingacli director migration run',
   onlyif  => 'icingacli director migration pending',
-  require => Package['icingacli'], }->
+  require => Package[ 'icingacli' ], }->
 
 file { '/etc/icingaweb2/modules/director/kickstart.ini':
   ensure  => 'file',
@@ -386,13 +385,13 @@ file { '/etc/icingaweb2/modules/director/kickstart.ini':
   group   => 'icingaweb2',
   mode    => '2770',
   source  => 'puppet:////vagrant/files/etc/icingaweb2/modules/director/kickstart.ini',
-  require => File['/etc/icingaweb2/modules/director'], }->
+  require => File[ '/etc/icingaweb2/modules/director' ], }->
 
 exec { 'Icinga Director Kickstart':
   path    => '/usr/local/bin:/usr/bin:/bin',
   command => 'icingacli director kickstart run',
   onlyif  => 'icingacli director kickstart required',
-  require => Service['icinga2'],
+  require => Service[ 'icinga2' ],
 }
 
 ####################################
@@ -404,7 +403,7 @@ package { [ 'rubygems', 'rubygem-bundler',
             'make', 'nodejs', 'v8',
           ]:
   ensure  => 'installed',
-  require => Class['epel'], }->
+  require => Class[ 'epel' ], }->
 
 file { 'gemrc':
   name   => '/etc/gemrc',
@@ -420,7 +419,7 @@ vcsrepo { '/usr/share/dashing-icinga2':
   revision => 'master',
   source   => 'https://github.com/Icinga/dashing-icinga2.git',
   force    => true,
-  require  => Package['git'], }->
+  require  => Package[ 'git' ], }->
 
 exec { 'dashing-bundle-install':
   path    => '/bin:/usr/bin:/sbin:/usr/sbin',
@@ -435,7 +434,7 @@ file { '/usr/local/bin/restart-dashing':
 exec { 'dashing-start':
   path    => '/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin',
   command => '/usr/share/dashing-icinga2/restart-dashing',
-  require => Service['icinga2'],
+  require => Service[ 'icinga2' ],
 }
 
 ####################################
@@ -447,7 +446,7 @@ icinga2::feature { 'graphite': }
 # 0.9.14 requires pytz: https://github.com/graphite-project/graphite-web/issues/1019
 package { 'pytz':
   ensure  => 'installed',
-  require => Class['epel'],
+  require => Class[ 'epel' ],
 }
 
 # avoid a bug in the pip provider
@@ -456,7 +455,7 @@ file { 'pip-symlink':
   ensure => 'link',
   path   => '/usr/bin/pip-python',
   target => '/usr/bin/pip',
-  before => Class['graphite'],
+  before => Class[ 'graphite' ],
 }
 
 file { '/opt/graphite':
@@ -516,7 +515,7 @@ file {'/etc/icingaweb2/modules/graphite':
   owner   => 'root',
   group   => 'icingaweb2',
   mode    => '2770',
-  require => [ Package['icingaweb2'], File['/etc/icingaweb2/modules'] ], } ->
+  require => [ Package[ 'icingaweb2' ], File[ '/etc/icingaweb2/modules' ] ], } ->
 
 file { '/etc/icingaweb2/modules/graphite/templates':
   ensure => 'link',
@@ -529,7 +528,7 @@ file { '/etc/icingaweb2/modules/graphite/config.ini':
   group   => 'icingaweb2',
   mode    => '2770',
   source  => 'puppet:////vagrant/files/etc/icingaweb2/modules/graphite/config.ini',
-  require => File['/etc/icingaweb2/modules/graphite'],
+  require => File[ '/etc/icingaweb2/modules/graphite' ],
 }
 
 
@@ -578,8 +577,8 @@ file { 'grafana-dashboard-icinga2':
 exec { 'finish-grafana-setup':
   path    => '/bin:/usr/bin:/sbin:/usr/sbin',
   command => '/usr/local/bin/grafana-setup',
-  require => [ Class['graphite'], Class['grafana::service'] ],
-  notify  => Class['apache::service'],
+  require => [ Class[ 'graphite' ], Class[ 'grafana::service' ] ],
+  notify  => Class[ 'apache::service' ],
 }
 
 ####################################
@@ -593,5 +592,5 @@ vcsrepo { '/var/www/html/icinga2-api-examples':
   revision => 'master',
   source   => 'https://github.com/Icinga/icinga2-api-examples.git',
   force    => true,
-  require  => Package['git'],
+  require  => Package[ 'git' ],
 }
